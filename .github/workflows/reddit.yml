@@ -1,4 +1,4 @@
-name: Reddit Posts Trending Now
+name: Upload Reddit Trending Now Posts to Google BigQuery
 
 on:
   schedule:
