@@ -1,4 +1,4 @@
-name: Upload Google Search Trending Now to Google BigQuery
+name: Upload Google Trending Now Search to Google BigQuery
 
 on:
   schedule:
