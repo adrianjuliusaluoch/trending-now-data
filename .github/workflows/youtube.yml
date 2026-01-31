@@ -1,4 +1,4 @@
-name: Upload Youtube Trending Now Videos to Google BigQuery
+name: Upload Youtube Videos Trending Now Videos to Google BigQuery
 
 on:
   schedule:
