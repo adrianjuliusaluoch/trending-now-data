@@ -64,11 +64,13 @@ if now.day == 1:
 
     # Check if current month table already has current month data
     try:
-        check_sql = f"SELECT COUNT(*) AS cnt 
+        check_sql = f"""
+                      SELECT COUNT(*) AS cnt 
                       FROM `{table_id}` 
                       WHERE EXTRACT(MONTH FROM start_date) = {month} 
                             AND 
-                            EXTRACT(YEAR FROM start_date) = {year}"
+                            EXTRACT(YEAR FROM start_date) = {year}
+                    """
         check_df = client.query(check_sql).to_dataframe()
         has_current_month_data = check_df.loc[0, "cnt"] > 0
     except NotFound:
