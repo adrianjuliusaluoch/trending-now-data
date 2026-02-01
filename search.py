@@ -60,11 +60,25 @@ bigdata.drop(columns=['google_trends_link', 'news_link'], inplace=True)
 # Define Table ID
 table_id = f"data-storage-485106.google.trending_now_{table_suffix}"
 
-if now.day == 1:
+if now.day == 1: 
+
+    # Check if current month table already has current month data
     try:
+        check_sql = f"SELECT COUNT(*) AS cnt 
+                      FROM `{table_id}` 
+                      WHERE EXTRACT(MONTH FROM start_date) = {month} 
+                            AND 
+                            EXTRACT(YEAR FROM start_date) = {year}"
+        check_df = client.query(check_sql).to_dataframe()
+        has_current_month_data = check_df.loc[0, "cnt"] > 0
+    except NotFound:
+        has_current_month_data = False  # Table doesn't exist yet
+  
+    if not has_current_month_data:
+      try:
         prev_month_date = now.replace(day=1) - timedelta(days=1)
         prev_table_suffix = f"{prev_month_date.year}_{prev_month_date.strftime('%b').lower()}"
-        prev_table_id = f"data-storage-485106.google.trending_now_{table_suffix}"
+        prev_table_id = f"data-storage-485106.google.trending_now_{prev_table_suffix}"
         
         try:
             prev_data = client.query(
@@ -83,8 +97,8 @@ if now.day == 1:
         job.result()
         print(f"All data loaded into {table_id}, total rows: {len(bigdata)}")
 
-    except Exception as e:
-        print(f"Error during 1st-of-month load: {e}")
+      except Exception as e:
+          print(f"Error during 1st-of-month load: {e}")
 
 else:
     # 🔥 NORMAL WORKFLOW (this was missing)
