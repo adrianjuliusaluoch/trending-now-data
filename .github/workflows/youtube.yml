@@ -40,8 +40,8 @@ jobs:
 
     - name: Commit youtube.ipynb
       run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "adrianjuliusaluoch"
+        git config --global user.email "adrianjuliusaluoch@gmail.com"
         git add youtube.ipynb
         git commit -m "Auto update executed youtube [skip ci]" || echo "No changes"
         git pull --rebase origin main
