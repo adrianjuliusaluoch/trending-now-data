@@ -44,4 +44,5 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add youtube.ipynb
         git commit -m "Auto update executed youtube [skip ci]" || echo "No changes"
+        git pull --rebase origin main
         git push origin HEAD:main
