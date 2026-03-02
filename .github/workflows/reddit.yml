@@ -5,6 +5,10 @@ on:
     - cron: '*/30 * * * *'  # Runs every 30 minutes
   workflow_dispatch:
 
+concurrency:
+  group: upload-reddit-posts
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
