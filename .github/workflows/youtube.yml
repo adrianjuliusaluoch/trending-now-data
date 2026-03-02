@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # ✅ Enables manual trigger
 
 concurrency:
-  group: upload-youtube-videos
+  group: upload-youtube-bq
   cancel-in-progress: false
 
 permissions:
