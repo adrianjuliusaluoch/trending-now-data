@@ -40,8 +40,8 @@ jobs:
         # Add or update a timestamp comment at top of file
         sed -i "1s|^# Last run:.*|# Last run: $(date -u)|; 1t; 1i # Last run: $(date -u)" search.py
 
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "adrianjuliusaluoch"
+        git config --global user.email "adrianjuliusaluoch@gmail.com"
         git add search.py
         git commit -m "Auto update search.py timestamp [skip ci]" || echo "No changes"
         git pull --rebase origin main
