@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: upload-google-search
+  group: upload-google-bq
   cancel-in-progress: false
 
 permissions:
