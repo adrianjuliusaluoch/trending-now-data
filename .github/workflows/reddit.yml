@@ -5,6 +5,9 @@ on:
     - cron: '*/30 * * * *'  # Runs every 30 minutes
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   get_and_upload_reddit_data:
     runs-on: ubuntu-latest
@@ -29,3 +32,14 @@ jobs:
     - name: Run your notebook
       run: |
         jupyter nbconvert --to notebook --execute reddit.ipynb --inplace
+
+    - name: Add timestamp to executed notebook
+      run: python3 -c "import json, datetime, pathlib; from datetime import timezone; nb_file=pathlib.Path('reddit.ipynb'); nb=json.loads(nb_file.read_text(encoding='utf-8')); nb.setdefault('metadata', {})['last_run_utc']=datetime.datetime.now(timezone.utc).isoformat(); nb_file.write_text(json.dumps(nb, indent=1), encoding='utf-8')"
+
+    - name: Commit reddit.ipynb
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add reddit.ipynb
+        git commit -m "Auto update executed reddit [skip ci]" || echo "No changes"
+        git push origin HEAD:main
