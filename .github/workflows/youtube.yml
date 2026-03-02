@@ -5,6 +5,10 @@ on:
     - cron: '*/30 * * * *'  # every 30 minutes
   workflow_dispatch:  # ✅ Enables manual trigger
 
+concurrency:
+  group: upload-youtube-videos
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
