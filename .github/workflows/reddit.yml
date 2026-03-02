@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: upload-reddit-posts
+  group: upload-reddit-bq
   cancel-in-progress: false
 
 permissions:
