@@ -35,7 +35,7 @@ jobs:
       run: |
         jupyter nbconvert --to notebook --execute youtube.ipynb --output executed_youtube.ipynb
 
-    - name: Add timestamp to executed notebook
+    - name: Add timestamp to notebook - Log runs to avoid temporary actions disabling
       run: python3 -c "import json, datetime, pathlib; from datetime import timezone; nb_file=pathlib.Path('youtube.ipynb'); nb=json.loads(nb_file.read_text(encoding='utf-8')); nb.setdefault('metadata', {})['last_run_utc']=datetime.datetime.now(timezone.utc).isoformat(); nb_file.write_text(json.dumps(nb, indent=1), encoding='utf-8')"
 
     - name: Commit youtube.ipynb
