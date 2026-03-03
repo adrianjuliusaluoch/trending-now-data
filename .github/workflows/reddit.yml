@@ -45,6 +45,6 @@ jobs:
         git config --global user.name "adrianjuliusaluoch"
         git config --global user.email "adrianjuliusaluoch@gmail.com"
         git add reddit.ipynb
-        git commit -m "Auto update executed reddit [skip ci]" || echo "No changes"
+        git commit -m "Keep workflow alive [skip ci]" || echo "No changes to commit"
         git pull --rebase origin main
         git push origin HEAD:main
