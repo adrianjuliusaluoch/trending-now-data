@@ -48,3 +48,4 @@ jobs:
         git commit -m "Keep workflow alive [skip ci]" || echo "No changes to commit"
         git pull --rebase origin main
         git push origin HEAD:main
+      continue-on-error: true
