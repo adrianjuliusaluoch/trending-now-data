@@ -15,6 +15,8 @@ permissions:
 jobs:
   get_and_upload_trend_data:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
     env:
       SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
 
