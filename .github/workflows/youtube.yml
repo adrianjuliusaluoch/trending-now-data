@@ -2,7 +2,7 @@ name: Upload Youtube Trending Now Videos to Google BigQuery
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # every 30 minutes
+    - cron: '0 1,5,9,13,17,21 * * *'  # Every 4 hours in Nairobi time
   workflow_dispatch:  # ✅ Enables manual trigger
 
 concurrency:
