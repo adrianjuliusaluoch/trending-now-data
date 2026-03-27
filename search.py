@@ -61,7 +61,7 @@ bigdata.drop(columns=['google_trends_link', 'news_link'], inplace=True)
 # Define Table ID
 table_id = f"data-storage-485106.google.trending_now_{table_suffix}"
 
-if now.day == 1: 
+if now.day == 1 or now.day == 2: 
 
     # Check if current month table already has current month data
     try:
