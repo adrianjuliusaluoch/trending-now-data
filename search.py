@@ -1,4 +1,4 @@
-# Last run: Mon Apr  6 06:56:55 UTC 2026
+# Last run: Mon Apr  6 10:14:52 UTC 2026
 # Import Packages
 from google.cloud import bigquery
 from serpapi import GoogleSearch
