@@ -26,7 +26,7 @@ models:
         tests:
           - not_null
       - name: increase_percentage
-        description: Percentage increase vs baseline. Values: 50,75,100,200,500,1000,2000,5000,10000,20000,50000
+        description: "Percentage increase vs baseline. Values: 50,75,100,200,500,1000,2000,5000,10000,20000,50000"
         tests:
           - not_null
 
