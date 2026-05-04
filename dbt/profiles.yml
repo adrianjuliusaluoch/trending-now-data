@@ -3,10 +3,9 @@ kenya_trends:
   outputs:
     prod:
       type: bigquery
-      method: service-account
+      method: oauth
       project: data-storage-485106
       dataset: google
-      keyfile: /tmp/keyfile.json
       location: US
       timeout_seconds: 300
       threads: 1
