@@ -30,11 +30,11 @@ SELECT
         HOUR
     )                                                                           AS trend_duration_hrs,
 
-    -- Derived: Kenya time fields (UTC+3) used by all marts
-    DATE(start_date AT TIME ZONE 'Africa/Nairobi')                              AS trend_date,
-    EXTRACT(HOUR FROM start_date AT TIME ZONE 'Africa/Nairobi')                 AS start_hour_eat,
-    FORMAT_DATE('%A', DATE(start_date AT TIME ZONE 'Africa/Nairobi'))           AS day_of_week,
-    FORMAT_DATE('%B', DATE(start_date AT TIME ZONE 'Africa/Nairobi'))           AS month_name,
-    FORMAT_DATE('%W', DATE(start_date AT TIME ZONE 'Africa/Nairobi'))           AS week_number
+    -- Derived: Kenya time fields (UTC+3)
+    DATE(DATETIME(start_date, 'Africa/Nairobi'))                                AS trend_date,
+    EXTRACT(HOUR FROM DATETIME(start_date, 'Africa/Nairobi'))                   AS start_hour_eat,
+    FORMAT_DATE('%A', DATE(DATETIME(start_date, 'Africa/Nairobi')))             AS day_of_week,
+    FORMAT_DATE('%B', DATE(DATETIME(start_date, 'Africa/Nairobi')))             AS month_name,
+    FORMAT_DATE('%W', DATE(DATETIME(start_date, 'Africa/Nairobi')))             AS week_number
 
 FROM `{{ env_var('DBT_TRENDS_TABLE') }}`
