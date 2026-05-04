@@ -17,7 +17,5 @@ models:
   kenya_trends:
     staging:
       +materialized: view
-      +schema: staging
     marts:
       +materialized: view
-      +schema: marts
