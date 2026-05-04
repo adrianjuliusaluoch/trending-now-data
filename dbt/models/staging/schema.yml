@@ -1,0 +1,74 @@
+version: 2
+
+models:
+
+  - name: stg_trending_now
+    description: >
+      Stable staging view over the current month's cumulative BigQuery table.
+      Contains all Kenya Google Trends data back to January 2026.
+      The underlying table name rotates monthly automatically via GitHub Actions.
+      All marts reference this view — Looker Studio never touches raw tables.
+    columns:
+      - name: query
+        description: The trending search keyword as captured from Google Trends
+        tests:
+          - not_null
+      - name: start_date
+        description: Timestamp (UTC) when the keyword started trending
+        tests:
+          - not_null
+      - name: active
+        description: TRUE if the keyword is still trending at time of data collection
+        tests:
+          - not_null
+      - name: search_volume
+        description: Approximate search volume from Google Trends SerpAPI
+        tests:
+          - not_null
+      - name: increase_percentage
+        description: Percentage increase vs baseline. Values: 50,75,100,200,500,1000,2000,5000,10000,20000,50000
+        tests:
+          - not_null
+
+  - name: mart_trending_topics
+    description: >
+      Core content creator recommendation model. Scored and labeled trending keywords.
+      Looker Studio "Today's Recommendations" page.
+    columns:
+      - name: query
+        tests:
+          - not_null
+      - name: recommendation_score
+        tests:
+          - not_null
+      - name: urgency_tier
+        description: "Viral / Hot / Rising / Active / Ended"
+      - name: content_window
+        description: "Act Now / Still Hot / Fading / Long Tail / Ended"
+      - name: rank_in_category
+        description: Rank within category by recommendation score (1 = top)
+
+  - name: mart_category_pulse
+    description: >
+      Daily category aggregations. One row per category per day.
+      Looker Studio "Category Trends" page.
+    columns:
+      - name: categories
+        tests:
+          - not_null
+      - name: trend_date
+        tests:
+          - not_null
+
+  - name: mart_keyword_recurrence
+    description: >
+      Recurring keyword analysis across all history. One row per unique keyword.
+      Looker Studio "Content Series Ideas" page.
+    columns:
+      - name: query
+        tests:
+          - not_null
+      - name: recurrence_label
+        description: "Series Material / Recurring / Appeared Twice / One-Off"
+      - name: scheduling_tip
+        description: "Best time: [Morning/Evening/Night] on [Day]"
