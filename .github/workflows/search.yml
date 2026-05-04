@@ -1,28 +1,22 @@
 name: Upload Google Trending Now Search to Google BigQuery
-
 on:
   schedule:
-    - cron: '0 1,5,9,13,17,21 * * *'  # Every 4 hours in Nairobi time
+    - cron: '0 1,5,9,13,17,21 * * *'
   workflow_dispatch:
-
 concurrency:
   group: upload-google-bq
   cancel-in-progress: false
-
 permissions:
   contents: write
-
 jobs:
   get_and_upload_trend_data:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
     env:
       SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
-
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3  # Updated to v3
+      uses: actions/checkout@v3
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -35,17 +29,29 @@ jobs:
     - name: Set up Google Cloud credentials
       uses: 'google-github-actions/auth@v2'
       with:
-        credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' # Replace with the name of your GitHub Actions secret
+        credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
 
     - name: Run your script
+      run: python search.py
+
+    # ── dbt steps (add these) ──────────────────────────────────────
+    - name: Install dbt
+      run: pip install dbt-bigquery
+
+    - name: Set dynamic BigQuery table name
       run: |
-        python search.py
+        SUFFIX=$(date +'%Y_%b' | tr '[:upper:]' '[:lower:]')
+        echo "DBT_TRENDS_TABLE=data-storage-485106.google.trending_now_${SUFFIX}" >> $GITHUB_ENV
+
+    - name: Run dbt models
+      run: dbt run --profiles-dir ./dbt --project-dir ./dbt
+      env:
+        DBT_TRENDS_TABLE: ${{ env.DBT_TRENDS_TABLE }}
+    # ──────────────────────────────────────────────────────────────
 
     - name: Update and commit search.py
       run: |
-        # Add or update a timestamp comment at top of file
         sed -i "1s|^# Last run:.*|# Last run: $(date -u)|; 1t; 1i # Last run: $(date -u)" search.py
-
         git config --global user.name "adrianjuliusaluoch"
         git config --global user.email "adrianjuliusaluoch@gmail.com"
         git add search.py
