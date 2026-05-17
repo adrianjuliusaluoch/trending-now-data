@@ -19,3 +19,7 @@ models:
       +materialized: view
     marts:
       +materialized: view
+    youtube:
+      +materialized: view
+      +database: data-storage-485106
+      +schema: youtube
