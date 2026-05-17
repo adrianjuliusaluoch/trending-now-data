@@ -1,0 +1,15 @@
+name: 'kenya_trends_youtube'
+version: '1.0.0'
+config-version: 2
+
+profile: 'kenya_trends_youtube'
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  kenya_trends_youtube:
+    +materialized: view
