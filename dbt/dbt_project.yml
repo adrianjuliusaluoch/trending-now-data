@@ -1,8 +1,8 @@
-name: 'kenya_trends_google'
+name: 'google_trending_now'
 version: '1.0.0'
 config-version: 2
 
-profile: 'kenya_trends_google'
+profile: 'google_trending_now'
 
 model-paths: ["models"]
 target-path: "target"
