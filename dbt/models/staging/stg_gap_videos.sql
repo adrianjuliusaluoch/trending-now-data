@@ -4,6 +4,8 @@
   config(materialized='view')
 }}
 
+{% set suffix = modules.datetime.datetime.now().strftime('%Y_%b').lower() %}
+
 SELECT
     keyword,
     video_id,
@@ -19,4 +21,4 @@ SELECT
     comment_count,
     region_code
 
-FROM `{{ env_var('DBT_YOUTUBE_TABLE') }}`
+FROM `{{ env_var('DBT_YOUTUBE_TABLE', 'data-storage-485106.youtube.trending_l24h_' ~ suffix) }}`
