@@ -1,0 +1,11 @@
+kenya_trends_youtube:
+  target: prod
+  outputs:
+    prod:
+      type: bigquery
+      method: oauth
+      project: data-storage-485106
+      dataset: youtube
+      location: US
+      timeout_seconds: 300
+      threads: 1
