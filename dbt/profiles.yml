@@ -1,4 +1,4 @@
-kenya_trends:
+google_trending_now:
   target: prod
   outputs:
     prod:
