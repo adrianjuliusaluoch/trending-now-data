@@ -1,4 +1,4 @@
-kenya_trends_youtube:
+youtube_trending_now:
   target: prod
   outputs:
     prod:
