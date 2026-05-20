@@ -31,7 +31,15 @@ params = {
 # Get Data
 search = GoogleSearch(params)
 results = search.get_dict()
-trending_searches = results["trending_searches"]
+
+# Safely extract trending searches
+trending_searches = results.get("trending_searches", [])
+
+# Stop execution if API returned nothing
+if not trending_searches:
+    print("No trending searches returned from API.")
+    print(results)
+    exit()
 
 # Extract Data
 records = []
