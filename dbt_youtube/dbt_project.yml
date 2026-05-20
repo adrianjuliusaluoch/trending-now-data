@@ -11,5 +11,5 @@ clean-targets:
   - "dbt_packages"
 
 models:
-  kenya_trends_youtube:
+  youtube_trending_now:
     +materialized: view
