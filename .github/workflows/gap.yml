@@ -33,6 +33,8 @@ jobs:
       env:
         YOUTUBE_API_KEY1: ${{ secrets.YOUTUBE_API_KEY1 }}
         YOUTUBE_API_KEY2: ${{ secrets.YOUTUBE_API_KEY2 }}
+        YOUTUBE_API_KEY3: ${{ secrets.YOUTUBE_API_KEY3 }}
+        YOUTUBE_API_KEY4: ${{ secrets.YOUTUBE_API_KEY4 }}
       run: |
         jupyter nbconvert --to notebook --execute gap.ipynb --output executed_gap.ipynb
 
