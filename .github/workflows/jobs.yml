@@ -28,13 +28,13 @@ jobs:
       with:
         credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
     - name: Run your script
-      run: python jobs_search.py
-    - name: Update and commit jobs_search.py
+      run: python jobs.py
+    - name: Update and commit jobs.py
       run: |
-        sed -i "1s|^# Last run:.*|# Last run: $(date -u)|; 1t; 1i # Last run: $(date -u)" jobs_search.py
+        sed -i "1s|^# Last run:.*|# Last run: $(date -u)|; 1t; 1i # Last run: $(date -u)" jobs.py
         git config --global user.name "adrianjuliusaluoch"
         git config --global user.email "adrianjuliusaluoch@gmail.com"
-        git add jobs_search.py
+        git add jobs.py
         git commit -m "Keep workflow alive [skip ci]" || echo "No changes to commit"
         git pull --rebase origin main
         git push
