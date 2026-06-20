@@ -140,7 +140,7 @@ client.delete_table(table_id)
 print(f"Table deleted successfully.")
 
 # Deduplicate
-data.drop_duplicates(subset=['job_id'], inplace=True)
+data.drop_duplicates(subset=['title', 'description', 'company_name', 'via'], keep='first', inplace=True)
 
 # Define Schema
 dataset_id = 'jobs'
