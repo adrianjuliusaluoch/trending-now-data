@@ -41,6 +41,16 @@ for location in locations:
     search = GoogleSearch(params)
     results = search.get_dict()
 
+    if "error" in results:
+        print(f"SerpAPI search failed for {location}: {results['error']}, retrying once...")
+        time.sleep(10)
+        results = search.get_dict()
+
+    if "error" in results:
+        print(f"SerpAPI search failed again for {location}: {results['error']}")
+        print(results)
+        continue
+
     job_results = results.get("jobs_results", [])
 
     if not job_results:
@@ -65,6 +75,10 @@ for location in locations:
 
 # Assign DataFrame
 bigdata = pd.DataFrame(records)
+
+if bigdata.empty:
+    print("No job listings collected this run — nothing to load. Exiting cleanly.")
+    exit(0)
 
 # Define Table ID
 table_id = f"data-storage-485106.jobs.gsearch_jobs_ke_{table_suffix}"
