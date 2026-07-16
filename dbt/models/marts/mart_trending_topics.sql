@@ -27,7 +27,6 @@ scored AS (
         active,
         search_volume,
         increase_percentage,
-        ROUND(increase_percentage / 100.0, 4)                          AS increase_percentage_decimal,
         categories,
         trend_breakdown,
         trend_duration_hrs,
