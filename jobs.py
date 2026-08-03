@@ -83,7 +83,7 @@ if bigdata.empty:
 # Define Table ID
 table_id = f"data-storage-485106.jobs.gsearch_jobs_ke_{table_suffix}"
 
-if now.day == 1 or now.day == 2:
+if now.day == 1 or now.day == 2 or now.day == 3:
 
     try:
         check_sql = f"""
