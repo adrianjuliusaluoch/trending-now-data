@@ -10,7 +10,8 @@ on:
     # workflow in THIS repo that you want auto-retried.
     # Must match the `name:` field at the top of each workflow
     # file exactly (not the filename).
-    workflows: ["Upload Google Trending Now Search to Google BigQuery"]
+    workflows: ["Upload Google Trending Now Search to Google BigQuery", "Upload Google Jobs Search to Google BigQuery",
+                "Upload Youtube Trending Now Videos to Google BigQuery", "Upload Youtube Gap Analysis to Google BigQuery"]
     types: [completed]
 
 permissions:
