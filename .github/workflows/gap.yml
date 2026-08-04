@@ -1,7 +1,6 @@
 name: Upload Youtube Gap Analysis to Google BigQuery
+
 on:
-  schedule:
-    - cron: '0 5 * * *'  # Once daily at 8am EAT
   workflow_dispatch:
 concurrency:
   group: upload-youtube-bq
