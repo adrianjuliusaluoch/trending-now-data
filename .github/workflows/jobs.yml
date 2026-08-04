@@ -1,7 +1,5 @@
 name: Upload Google Jobs Search to Google BigQuery
 on:
-  schedule:
-    - cron: '0 0,4,8,12,16,20 * * *'
   workflow_dispatch:
 concurrency:
   group: upload-google-jobs-bq
