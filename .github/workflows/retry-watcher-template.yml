@@ -1,0 +1,69 @@
+# ============================================================
+# REUSABLE RETRY WATCHER — copy into any repo as-is.
+# Only edit the "workflows:" list below to match that repo's
+# actual workflow names. Nothing else needs to change.
+# ============================================================
+name: Retry Pipelines On Failure
+on:
+  workflow_run:
+    # <-- EDIT THIS: list the exact `name:` value of each
+    # workflow in THIS repo that you want auto-retried.
+    # Must match the `name:` field at the top of each workflow
+    # file exactly (not the filename).
+    workflows: ["Workflow Name One", "Workflow Name Two"]
+    types: [completed]
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  retry_on_failure:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.SECRET_GITHUB_TOKEN }}
+      MAX_RETRIES: 3
+    steps:
+      - name: Derive per-workflow counter name
+        id: varname
+        run: |
+          SAFE_NAME=$(echo "${{ github.event.workflow_run.name }}" | tr -c '[:alnum:]' '_')
+          echo "name=RETRY_COUNT_$SAFE_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Read current retry count
+        id: count
+        run: |
+          CURRENT=$(gh variable get ${{ steps.varname.outputs.name }} --repo ${{ github.repository }} 2>/dev/null || echo 0)
+          echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+
+      - name: Stop if ceiling reached
+        if: ${{ steps.count.outputs.current >= env.MAX_RETRIES }}
+        run: |
+          echo "Retry ceiling of $MAX_RETRIES reached for ${{ github.event.workflow_run.name }}. Not retrying further."
+          exit 0
+
+      - name: Increment count and re-dispatch
+        if: ${{ steps.count.outputs.current < env.MAX_RETRIES }}
+        run: |
+          NEXT=$(( ${{ steps.count.outputs.current }} + 1 ))
+          gh variable set ${{ steps.varname.outputs.name }} --repo ${{ github.repository }} --body "$NEXT"
+          echo "Retry attempt $NEXT of $MAX_RETRIES for ${{ github.event.workflow_run.name }}"
+          gh workflow run "${{ github.event.workflow_run.name }}" \
+            --repo ${{ github.repository }} \
+            --ref ${{ github.event.workflow_run.head_branch }}
+
+  reset_on_success:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.SECRET_GITHUB_TOKEN }}
+    steps:
+      - name: Derive per-workflow counter name
+        id: varname
+        run: |
+          SAFE_NAME=$(echo "${{ github.event.workflow_run.name }}" | tr -c '[:alnum:]' '_')
+          echo "name=RETRY_COUNT_$SAFE_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Reset retry count
+        run: gh variable set ${{ steps.varname.outputs.name }} --repo ${{ github.repository }} --body 0
