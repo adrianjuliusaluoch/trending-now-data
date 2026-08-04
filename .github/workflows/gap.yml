@@ -15,47 +15,49 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.12'
-
     - name: Install dependencies
       run: pip install -r requirements.txt
-
     - name: Set up Google Cloud credentials
       uses: 'google-github-actions/auth@v2'
       with:
         credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
-
     - name: Run gap script
+      uses: nick-fields/retry@v3
       env:
         YOUTUBE_API_KEY1: ${{ secrets.YOUTUBE_API_KEY1 }}
         YOUTUBE_API_KEY2: ${{ secrets.YOUTUBE_API_KEY2 }}
         YOUTUBE_API_KEY3: ${{ secrets.YOUTUBE_API_KEY3 }}
         YOUTUBE_API_KEY4: ${{ secrets.YOUTUBE_API_KEY4 }}
-      run: |
-        jupyter nbconvert --to notebook --execute gap.ipynb --output executed_gap.ipynb
-
+      with:
+        timeout_minutes: 5
+        max_attempts: 3
+        retry_wait_seconds: 15
+        retry_on: error
+        command: jupyter nbconvert --to notebook --execute gap.ipynb --output executed_gap.ipynb
     - name: Install dbt
       run: pip install dbt-bigquery
-
     - name: Set dynamic BigQuery table names
       run: |
         SUFFIX=$(date +'%Y_%b' | tr '[:upper:]' '[:lower:]')
         echo "DBT_TRENDS_TABLE=data-storage-485106.google.trending_now_${SUFFIX}" >> $GITHUB_ENV
         echo "DBT_YOUTUBE_TABLE=data-storage-485106.youtube.trending_l24h_${SUFFIX}" >> $GITHUB_ENV
-
     - name: Run dbt models
-      run: dbt run --profiles-dir ./dbt_youtube --project-dir ./dbt_youtube
+      uses: nick-fields/retry@v3
       env:
         DBT_TRENDS_TABLE: ${{ env.DBT_TRENDS_TABLE }}
         DBT_YOUTUBE_TABLE: ${{ env.DBT_YOUTUBE_TABLE }}
-
+      with:
+        timeout_minutes: 5
+        max_attempts: 3
+        retry_wait_seconds: 15
+        retry_on: error
+        command: dbt run --profiles-dir ./dbt_youtube --project-dir ./dbt_youtube
     - name: Add timestamp to notebook
       run: python3 -c "import json, datetime, pathlib; from datetime import timezone; nb_file=pathlib.Path('gap.ipynb'); nb=json.loads(nb_file.read_text(encoding='utf-8')); nb.setdefault('metadata', {})['last_run_utc']=datetime.datetime.now(timezone.utc).isoformat(); nb_file.write_text(json.dumps(nb, indent=1), encoding='utf-8')"
-
     - name: Commit gap.ipynb
       run: |
         git config --global user.name "adrianjuliusaluoch"
