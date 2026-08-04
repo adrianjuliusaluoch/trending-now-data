@@ -28,7 +28,13 @@ jobs:
       with:
         credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
     - name: Run your script
-      run: python jobs.py
+      uses: nick-fields/retry@v3
+      with:
+        timeout_minutes: 5
+        max_attempts: 3
+        retry_wait_seconds: 15
+        retry_on: error
+        command: python jobs.py
     - name: Update and commit jobs.py
       run: |
         sed -i "1s|^# Last run:.*|# Last run: $(date -u)|; 1t; 1i # Last run: $(date -u)" jobs.py
