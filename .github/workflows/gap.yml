@@ -3,7 +3,7 @@ name: Upload Youtube Gap Analysis to Google BigQuery
 on:
   workflow_dispatch:
 concurrency:
-  group: upload-youtube-bq
+  group: upload-youtube-gap-bq
   cancel-in-progress: false
 permissions:
   contents: write
