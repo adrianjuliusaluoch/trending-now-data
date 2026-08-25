@@ -139,9 +139,30 @@ print(f"Table deleted successfully.")
 
 # Check Total Number of Duplicate Records
 duplicated = data.duplicated(subset=['query', 'start_date']).sum()
-    
+
+# FIX: for repeated pulls of the same trend (same query + start_date), prefer the
+# row where it's already ended (active=False) over one where it's still active —
+# an ended snapshot is always Google's more final word than an in-progress one,
+# regardless of which pull happened to arrive first.
+data.sort_values(by='active', ascending=True, kind='mergesort', inplace=True)
+
 # Remove Duplicate Records
-data.drop_duplicates(subset=['query', 'start_date'], inplace=True)
+data.drop_duplicates(subset=['query', 'start_date'], keep='first', inplace=True)
+
+# Restore the original newest-trend-first ordering for the final table
+data.sort_values(by='start_date', ascending=False, inplace=True)
+
+# ── ONE-TIME CLEANUP — remove this block after this run ──────────────────────
+# Drops records still marked active that have been running longer than any
+# trend has ever taken to genuinely resolve (7 days). These are leftovers from
+# before the dedup fix above and would otherwise sit in the table permanently
+# looking "active," causing confusion. This is a one-off purge of existing bad
+# rows, not something the ongoing pipeline needs going forward.
+cutoff = pd.Timestamp.now(tz='UTC') - pd.Timedelta(days=7)
+stuck_mask = (data['active'] == True) & (pd.to_datetime(data['start_date'], utc=True) < cutoff)
+print(f"One-time cleanup: removing {stuck_mask.sum()} stuck active record(s) older than 7 days.")
+data = data[~stuck_mask]
+# ───────────────────────────────────────────────────────────────────────────
 
 # Define the dataset ID and table ID
 dataset_id = 'google'
