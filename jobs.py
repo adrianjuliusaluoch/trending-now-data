@@ -34,7 +34,7 @@ for location in locations:
         "location": str(location),
         "google_domain": "google.com",
         "hl": "en",
-        # "gl": "ke",
+        "no_cache": "true",
         "api_key": os.getenv("SERPAPI_KEY")
     }
 
