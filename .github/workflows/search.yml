@@ -54,14 +54,3 @@ jobs:
         retry_wait_seconds: 15
         retry_on: error
         command: dbt run --profiles-dir ./dbt --project-dir ./dbt
-    # ──────────────────────────────────────────────────────────────
-    - name: Update and commit search.py
-      run: |
-        sed -i "1s|^# Last run:.*|# Last run: $(date -u)|; 1t; 1i # Last run: $(date -u)" search.py
-        git config --global user.name "adrianjuliusaluoch"
-        git config --global user.email "adrianjuliusaluoch@gmail.com"
-        git add search.py
-        git commit -m "Keep workflow alive [skip ci]" || echo "No changes to commit"
-        git pull --rebase origin main
-        git push
-      continue-on-error: true
